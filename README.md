@@ -39,5 +39,5 @@ As you develop your app, you may (but are not required to) consider the followin
 
 
 # Team Members
-### Jack Hanlon, B.Sc. 
+### Jack Hanlon, B.Sc. jacklhanlon@yahoo.co.uk
 ### Thomas Genet, B.Sc.
