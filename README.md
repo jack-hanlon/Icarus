@@ -39,5 +39,5 @@ As you develop your app, you may (but are not required to) consider the followin
 
 
 # Team Members
-## Jack Hanlon, B.Sc. 
-## Thomas Genet, B.Sc.
+### Jack Hanlon, B.Sc. 
+### Thomas Genet, B.Sc.
