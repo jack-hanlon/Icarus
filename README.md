@@ -23,9 +23,14 @@ Given a user's location (or a user-specified location), your application should 
 
 Your application should be made available to the public using a secure online distribution mechanism typically used for the mobile application platform. Your application should be made available on a variety of mobile device types (i.e., android, iPhone, windows phone).
 
-
-
-
 # Potential Considerations
+
+As you develop your app, you may (but are not required to) consider the following:
+1. You could design the app for specific use cases. For example, the user may be a homeowner who: a) is interested in seeking historical data to enable more informed solar panel purchasing decisions, or b) wants to monitor the electrical output of the home’s current system relative to satellite-based estimates of sunshine (or solar irradiance) reaching the home’s location.
+
+2. You could make the application expandable by adding user-defined buttons to display specific POWER parameters upon request (i.e., temperature, humidity, wind, etc.).
+
+3. You could allow integration of the user's own measurements to supplement or to compare with the NASA parameters.
+
 
 # Technologies and our Approach
