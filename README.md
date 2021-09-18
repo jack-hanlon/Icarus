@@ -35,7 +35,7 @@ As you develop your app, you may (but are not required to) consider the followin
 
 
 # Technologies and our Approach
-React Native Cross Platform Mobile Application Development
+React Native Cross Platform Mobile Application Development, using Expo for deployment.
 
 
 # Team Members
