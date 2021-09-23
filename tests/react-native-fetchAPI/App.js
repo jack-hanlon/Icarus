@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  Dimensions,
       } from "react-native";
 import {
   LineChart,
@@ -20,12 +21,15 @@ import {
 import { styles, chartConfig } from './StyleSheet.js'
 import axios from 'axios'
 
+const window = Dimensions.get('window');
 
 
 
 const lat = 43.7068;
 const lon = -79.3985;
-const test_url = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-79.7966&latitude=43.7018&start=20210101&end=20210115&format=JSON'
+const test_url1 = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-75.7097&latitude=45.3928&start=20210101&end=20210131&format=JSON'
+const test_url2 = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-123.1706&latitude=49.3199&start=20210101&end=20210131&format=JSON'
+const test_url3 ='https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-123.4343&latitude=48.4239&start=20210101&end=20210331&format=JSON'
 formated_url = (lon, lat) => `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2MDEW,T2MWET,TS,T2M_RANGE,T2M_MAX,T2M_MIN&community=RE&longitude=${lon}&latitude=${lat}&start=20150101&end=20150305&format=JSON`;
 const url = formated_url(lon, lat)
 
@@ -34,15 +38,27 @@ const url = formated_url(lon, lat)
   - easier code (no this.state everywhere) and more elegant!!!
 TOD
 ------------------------------------------------
+- CHANGE views to safeview!!!!!!!!!!!!!!!!!!!!!!!
 - continue working on fetching data from API
-- inspect output of useEffect hook
-    * see what the returned JSON looks like
-    * figure out how to extract the data from JSON
-    * load extracted data into state
-    * dates will be loaded into 'Labels', data into 'data' so can be ploted
+    * make it so can fetch other data (sunshine, humidity etc)
+    * custom dates
+- use formatYLabel prop for linechart
+    * create function to format dates so they look nicer on graph
+    * pass that function to formatYLabel()
+    * this function should take in a string and output a string
 - Make interactive:
     * maybe add an interactive component to select data date range
     * make plots interactive with onDataPointClick prop
+    * look at chart kit documentation, its there
+
+- See if we need to use useEffect hooks:
+    * could help the app run smoother
+    * control lifecycle and side effects of each component
+    * clean up function:
+        - eg: if we called api to fetch temperature+humidity+sunshine hours
+              data and we plot one of the results after one another,
+              we dont want to be making a fetch request each time a new graph
+              is made => 
 */
 
 const App = () => {
@@ -90,7 +106,7 @@ const App = () => {
   }
 
   const apiCall = () => {
-    axios.get(test_url)
+    axios.get(test_url3)
       .then(response => {
       updateData(response);
     }, error => {
@@ -170,12 +186,17 @@ and have laoding wheel appear only when a fetch request is made*/}
 
         <LineChart
           data={apiDataPlot}
-          width={220}
+          width={window.width}
           height={220}
+          withDots={false}
+          withHorizontalLines={false}
+          withVerticalLines={true}
+          yAxisInterval={1200}
+          verticalLabelRotation={45}
           chartConfig={chartConfig}
         />
-      </View>
-
+      </View> 
+        
       <StatusBar style="dark" />
     </SafeAreaView>
   );
