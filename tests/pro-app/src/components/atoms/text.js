@@ -1,8 +1,25 @@
-import { Text, } from "react-native"
-import { styles } from "../../../../react-native-fetchAPI/StyleSheet";
+import React from 'react';
+import { Text, View, TextInput } from "react-native"
+import colors from '../../themes/colors';
+import { styles } from '../../themes/styleSheet';
 
-const basicText = (label) => {
+const BasicText = ({label}) => {
     return(
-        <Text styles={styles.basicText}>{label}</Text>
+        <Text style={styles.textBox}>{label}</Text>
     );
 };
+
+const TextInputBox = ({onChange}) => {
+    return (
+        <TextInput
+            style={styles.textInput}
+            keyboardType='numeric'
+            placeholder='eg.: 43.00'
+            placeholderTextColor={colors.textPrimary}
+            onChangeText={onChange}
+        />
+    )
+
+}
+
+export { BasicText, TextInputBox }
