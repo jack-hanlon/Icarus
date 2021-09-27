@@ -63,8 +63,32 @@ const styles = StyleSheet.create({
         marginTop:5,
         marginBottom:5,
         textAlign:'center'
+    },
+    latloninContainer: {
+        flex:0.4,
+        margin: 1,
+        alignItems: 'center',
+    },
+    chartRow: {
+        flex: 0.1,
+        
+      },
+    body: {
+        flex: 0.5,
     }
 
 })
 
-export { styles };
+const chartConfig={
+    backgroundColor: '#0089FF',
+    backgroundGradientFrom: '#373A3A',
+    backgroundGradientTo: '#323535',
+    decimalPlaces: 2, 
+    color: (opacity = 255) => `rgba(168, 247, 255, ${opacity})`,
+    style: {
+      borderRadius: 1,
+      marginTop:1
+    },
+  }
+
+export { styles, chartConfig };
