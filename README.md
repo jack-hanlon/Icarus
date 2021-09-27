@@ -1,4 +1,4 @@
-# You Are My Sunshine
+# You Are My Sunshine - ICARUS PROJECT
 ## Entry into the NASA Space Apps Challenge Hackathon (October 2nd 2021)
 # Table of Contents
 * [Summary](#summary)
