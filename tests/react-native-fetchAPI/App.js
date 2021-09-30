@@ -18,48 +18,40 @@ import {
   ContributionGraph,
   StackedBarChart
       } from "react-native-chart-kit";
-import { styles, chartConfig } from './StyleSheet.js'
-import axios from 'axios'
+import { styles, chartConfig } from './StyleSheet.js';
+import axios from 'axios';
+import RadioGroup from 'react-native-radio-buttons-group';
+// import { Provider ,Appbar,RadioButton} from 'react-native-paper';
+
+
 
 const window = Dimensions.get('window');
+// const lat = 43.7068;
+// const lon = -79.3985;
+// const test_url1 = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-75.7097&latitude=45.3928&start=20210101&end=20210131&format=JSON'
+// const test_url2 = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-123.1706&latitude=49.3199&start=20210101&end=20210131&format=JSON'
+// const test_url3 ='https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-123.4343&latitude=48.4239&start=20210101&end=20210331&format=JSON'
+format_url = (param, lon, lat) => `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=${param}&community=RE&longitude=${lon}&latitude=${lat}&start=20210101&end=20210120&format=JSON`;
+// const url = format_url(param, lon, lat)
 
-
-
-const lat = 43.7068;
-const lon = -79.3985;
-const test_url1 = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-75.7097&latitude=45.3928&start=20210101&end=20210131&format=JSON'
-const test_url2 = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-123.1706&latitude=49.3199&start=20210101&end=20210131&format=JSON'
-const test_url3 ='https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-123.4343&latitude=48.4239&start=20210101&end=20210331&format=JSON'
-formated_url = (lon, lat) => `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2MDEW,T2MWET,TS,T2M_RANGE,T2M_MAX,T2M_MIN&community=RE&longitude=${lon}&latitude=${lat}&start=20150101&end=20150305&format=JSON`;
-const url = formated_url(lon, lat)
-
-/*
-### USE FUNCTIONAL COMPONENTS W/ HOOKS DO NOT USE CLASS BASED COMPONENTS ###
-  - easier code (no this.state everywhere) and more elegant!!!
-TOD
-------------------------------------------------
-- CHANGE views to safeview!!!!!!!!!!!!!!!!!!!!!!!
-- continue working on fetching data from API
-    * make it so can fetch other data (sunshine, humidity etc)
-    * custom dates
-- use formatYLabel prop for linechart
-    * create function to format dates so they look nicer on graph
-    * pass that function to formatYLabel()
-    * this function should take in a string and output a string
-- Make interactive:
-    * maybe add an interactive component to select data date range
-    * make plots interactive with onDataPointClick prop
-    * look at chart kit documentation, its there
-
-- See if we need to use useEffect hooks:
-    * could help the app run smoother
-    * control lifecycle and side effects of each component
-    * clean up function:
-        - eg: if we called api to fetch temperature+humidity+sunshine hours
-              data and we plot one of the results after one another,
-              we dont want to be making a fetch request each time a new graph
-              is made => 
-*/
+const radioButtonsData = [
+  {
+    id: 'T2M',
+    label: (
+      <Text style={{color: '#A8F7FF'}}>{'Temp'}</Text>
+    ),
+    color:'#A8F7FF',
+    selected:false,
+  },
+  {
+    id:'ALLSKY_SFC_SW_DWN',
+    label:(
+      <Text style={{color: '#A8F7FF'}}>{'Flux'}</Text>
+    ),
+    color:'#A8F7FF',
+    selected:false,
+  }
+]
 
 const App = () => {
 
@@ -85,6 +77,8 @@ const App = () => {
   const [label, setLabel] = useState(testLabel)
   const [data, setData] = useState(testData)
   const [islaoding, setLoading] = useState(true)
+  const [radioButtons, setRadioButtons] = useState(radioButtonsData);
+  const [parameterName, setParameter] = useState()
 
   const apiDataPlot= {
     labels: label,
@@ -99,16 +93,32 @@ const App = () => {
   const updateData = (response) => {
     // Takes the response of the api call, extracts, splits
     // then updates data states for plotting
-    const T2M = response.data.properties.parameter.T2M
-    const dates = Object.keys(T2M)
-    const temps = Object.values(T2M)
-    setLabel(dates), setData(temps)
-  }
+    
+    if(parameterName == 'T2M'){
+      const T2M = response.data.properties.parameter.T2M
+      const dates = Object.keys(T2M)
+      const temps = Object.keys(T2M)
+      setLabel(dates), setData(temps)
+    }
+   else if (parameterName == 'ALLSKY_SFC_SW_DWN') {
+    const Flux = response.data.properties.parameter.ALLSKY_SFC_SW_DWN
+    const dates = Object.keys(Flux)
+    const flux = Object.keys(Flux)
+    setLabel(dates), setData(flux)
+   } 
+
+   else {
+     return;
+   }
+  };
 
   const apiCall = () => {
-    axios.get(test_url3)
+    data_url = format_url(parameterName, lon, lat)
+    console.log(data_url)
+    axios.get(data_url)
       .then(response => {
-      updateData(response);
+        //console.log(response)
+        updateData(response);
     }, error => {
       console.log(error)
     });
@@ -121,6 +131,17 @@ const App = () => {
   const resetValues = () => {
     setlon(''), setlat('')
   }
+
+  const onPressRadioButton = radioButtonsArray => {
+    //console.log(radioButtonsArray);
+    setRadioButtons(radioButtonsArray);
+    for (const x of radioButtons) {
+      if(x.selected==true){
+        setParameter(x.id)
+      }
+    }
+    console.log(parameterName)
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -161,18 +182,32 @@ const App = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.textOutputBar}>
+      {/* <View style={styles.textOutputBar}>
         <Text style={styles.textBox}>
           Input Lat: {lat}       Input Lon: {lon}
         </Text> 
+      </View> */}
+      <View style={styles.radioButtonRow}>
+        <RadioGroup
+          radioButtons={radioButtons}
+          onPress={onPressRadioButton}
+          layout="row"
+        />
       </View>
-
+      <View style={styles.textOutputBar}>
+        <Text style={styles.textBox}>Input Parameter: </Text>
+        <View style={styles.textOutputBarParams}>
+          <Text style={styles.textBox}>
+            Lat: {lat}    Lon: {lon}    Parameter: {parameterName}
+          </Text>
+        </View>
+      </View>
       <View style={styles.Body}>
       <TouchableOpacity
           style={styles.fetchbutton}
           onPress={apiCall}
         >
-          <Text style={styles.texButton}>Fetch Data</Text>
+          <Text style={styles.texButton}>Fetch</Text>
         </TouchableOpacity>
 
 {/* add .finally(()=>{setLoading(false)}); promise to axios.get to get
@@ -190,10 +225,14 @@ and have laoding wheel appear only when a fetch request is made*/}
           height={220}
           withDots={false}
           withHorizontalLines={false}
-          withVerticalLines={true}
+          withVerticalLines={false}
           yAxisInterval={1200}
-          verticalLabelRotation={45}
           chartConfig={chartConfig}
+          bezier
+            style={{
+              marginVertical: 8,
+              borderRadius: 16
+              }}
         />
       </View> 
         
