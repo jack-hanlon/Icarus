@@ -10,7 +10,7 @@ export const  changeLon = (lon) => ({
     payload: lon,
 })
 
-export const pickParam = (paramIndex) => ({
+export const pickParam = (param) => ({
     type: PICK_PARAM,
-    payload: paramIndex,
+    payload: param,
 })

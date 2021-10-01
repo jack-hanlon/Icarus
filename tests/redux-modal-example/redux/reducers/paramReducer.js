@@ -1,7 +1,7 @@
 import { PICK_PARAM } from "../actions/actions";
 
 const initialState = {
-    param: "No param picked",
+    param: "",
 
 };
 
@@ -12,7 +12,7 @@ const paramReducer = (state=initialState, action) => {
                 ...state,
                 param: action.payload,
             }
-        
+
         default:
             return state;
     };

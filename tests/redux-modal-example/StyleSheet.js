@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     inputBar: {
         flex:0.1,
         flexDirection:'row',
+        marginVertical:6,
     },
     button: {
         margin:1,
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
         height: 40, 
       },
     modelContainer: {
-        flex: 0.5,
+        flex: 0.7,
         alignItems:'center',
         justifyContent: 'center',
         backgroundColor: '#000',
