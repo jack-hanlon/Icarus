@@ -3,7 +3,9 @@ import { View, Text, TextInput } from "react-native";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
 import { changeLat } from '../../redux/actions/index'
+import { setParam } from "../../redux/actions/index";
 import { useSelector, useDispatch } from "react-redux";
+import ModalSelector from 'react-native-modal-selector'
 
 import {
     VictoryChart as Chart,
@@ -16,7 +18,7 @@ import {
     } from 'victory-native'
 
 import dataFormater from "../../utils/ApiDataFormater";
-
+import pickerData from "../assets/modalPickerData";
 
 const dummyRawData = 
 {
@@ -35,18 +37,31 @@ const dummyData = dataFormater(dummyRawData).data
 const Screen1 = () =>{
     const dispatch = useDispatch()
     const lat = useSelector(state=>state.coords.lat)
+    const param = useSelector(state=>state.param.param)
 
+    const handleChange = (val) =>{
+
+        console.log(val)
+    }
     return(
 
         <View style={styles.container}>
             <Text style={styles.text}>Lat val {lat}</Text>
+    
             <TextInput 
                 style={styles.textInput}
                 onChangeText={(val)=>dispatch(changeLat(val))}
                 keyboardType='numeric'
 
                 />
-            <View>
+            <ModalSelector 
+                data={pickerData}
+                initValue="Click to select param"
+                style={{marginTop:10}}
+                onChange={(val)=>dispatch(setParam(val.key))}
+            />
+            <Text style={styles.text2}>Selected Param: {param}</Text>
+
             <Chart 
                 width={Metrics.screenWidth * 0.8}
                 height={Metrics.screenHeight * 0.3}
@@ -56,7 +71,7 @@ const Screen1 = () =>{
                 <VictoryAxis fixLabelOverlap={true} />
                 <Line data={dummyData} x="date" y="data"/>   
             </Chart>
-            </View>
+            
         </View> 
     )
 };

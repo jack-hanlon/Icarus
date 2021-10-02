@@ -21,6 +21,10 @@ const styles = StyleSheet.create({
         margin:10,
         fontSize: fontSize.font20
     },
+    text2:{
+        color:colors.textPrimary,
+        margin:10,
+    },
     textInput:{
         borderColor:'#000',
         borderWidth:1,
