@@ -31,7 +31,7 @@ const window = Dimensions.get('window');
 // const test_url1 = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-75.7097&latitude=45.3928&start=20210101&end=20210131&format=JSON'
 // const test_url2 = 'https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-123.1706&latitude=49.3199&start=20210101&end=20210131&format=JSON'
 // const test_url3 ='https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M&community=RE&longitude=-123.4343&latitude=48.4239&start=20210101&end=20210331&format=JSON'
-format_url = (param, lon, lat) => `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=${param}&community=RE&longitude=${lon}&latitude=${lat}&start=20210101&end=20210120&format=JSON`;
+const format_url = (param, lon, lat) => `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=${param}&community=RE&longitude=${lon}&latitude=${lat}&start=20210101&end=20210730&format=JSON`;
 // const url = format_url(param, lon, lat)
 
 const radioButtonsData = [
@@ -96,12 +96,14 @@ const App = () => {
     
     if(parameterName == 'T2M'){
       const T2M = response.data.properties.parameter.T2M
+      console.log(T2M)
       const dates = Object.keys(T2M)
       const temps = Object.keys(T2M)
       setLabel(dates), setData(temps)
     }
    else if (parameterName == 'ALLSKY_SFC_SW_DWN') {
     const Flux = response.data.properties.parameter.ALLSKY_SFC_SW_DWN
+    console.log(Flux)
     const dates = Object.keys(Flux)
     const flux = Object.keys(Flux)
     setLabel(dates), setData(flux)
@@ -111,10 +113,10 @@ const App = () => {
      return;
    }
   };
-
+  
   const apiCall = () => {
-    data_url = format_url(parameterName, lon, lat)
-    console.log(data_url)
+    const data_url = format_url(parameterName, lon, lat)
+    console.log(parameterName, lon, lat)
     axios.get(data_url)
       .then(response => {
         //console.log(response)
@@ -187,15 +189,20 @@ const App = () => {
           Input Lat: {lat}       Input Lon: {lon}
         </Text> 
       </View> */}
-      <View style={styles.radioButtonRow}>
+      {/* <View style={styles.radioButtonRow}>
         <RadioGroup
           radioButtons={radioButtons}
           onPress={onPressRadioButton}
           layout="row"
         />
-      </View>
+      </View> */}
       <View style={styles.textOutputBar}>
-        <Text style={styles.textBox}>Input Parameter: </Text>
+       
+          <RadioGroup
+            radioButtons={radioButtons}
+            onPress={onPressRadioButton}
+            layout="row"
+          />
         <View style={styles.textOutputBarParams}>
           <Text style={styles.textBox}>
             Lat: {lat}    Lon: {lon}    Parameter: {parameterName}

@@ -78,6 +78,10 @@ const styles = StyleSheet.create({
       marginVertical: 10,
       marginBottom:20,
 
+    },
+    radioButtonRow:{
+      position:'absolute',
+      top:200,
     }
   });
   
