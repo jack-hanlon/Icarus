@@ -21,6 +21,11 @@ const styles = StyleSheet.create({
         margin:10,
         fontSize: fontSize.font20
     },
+    textInput:{
+        borderColor:'#000',
+        borderWidth:1,
+        width:150,
+    },
     logo: {
         width: 50,
         height: 50,

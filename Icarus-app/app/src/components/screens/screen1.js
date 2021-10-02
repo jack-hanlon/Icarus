@@ -36,19 +36,15 @@ const Screen1 = () =>{
     const dispatch = useDispatch()
     const lat = useSelector(state=>state.coords.lat)
 
-    const handleChange = (val) =>{
-        dispatch(changeLat(val)),
-        console.log(lat)
-    }
-
     return(
 
         <View style={styles.container}>
-            <Text style={styles.text}>Screen1 {lat}</Text>
+            <Text style={styles.text}>Lat val {lat}</Text>
             <TextInput 
-                stlye={{borderWidth:100, borderColor:'#000'}}
-                onChangeText={handleChange}
+                style={styles.textInput}
+                onChangeText={(val)=>dispatch(changeLat(val))}
                 keyboardType='numeric'
+
                 />
             <View>
             <Chart 
