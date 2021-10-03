@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Button } from "react-native";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
 import { changeLat, changeLon } from '../../redux/actions/index'
@@ -7,7 +7,8 @@ import { setParam } from "../../redux/actions/index";
 import { useSelector, useDispatch } from "react-redux";
 import ModalSelector from 'react-native-modal-selector'
 import Modal from "react-native-modal";
-
+import DateTimePicker from '@react-native-community/datetimepicker'
+import { RadioButton } from 'react-native-paper';
 import {
     VictoryChart as Chart,
     VictoryLine as Line,
@@ -21,7 +22,8 @@ import dataFormater from "../../utils/ApiDataFormater";
 import pickerData from "../assets/modalPickerData";
 
 import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps';
+
+const format_url = (temp_res,param, lon, lat) => `https://power.larc.nasa.gov/api/temporal/${temp_res}/point?parameters=${param}&community=RE&longitude=${lon}&latitude=${lat}&start=20210101&end=20210730&format=JSON`;
 
 
 const dummyRawData = 
@@ -41,7 +43,7 @@ const dummyData = dataFormater(dummyRawData).data
 
 
 const Screen1 = ({navigation}) =>{
-    
+
     const dispatch = useDispatch();
     const lat = useSelector(state=>state.coords.lat);
     const lon = useSelector(state=>state.coords.lon);
@@ -51,21 +53,16 @@ const Screen1 = ({navigation}) =>{
     const [mapModal, setMapModal] = useState(false)
     const [getLocation, setGetLocation] = useState(false);
 
+    const [startDate, setStartDate] = useState(new Date(1598051730000));
+    const [endDate, setEndDate] = useState(new Date(1598051730000));
+    //const [mode, setMode] = useState('date');
+    const [showStart, setShowStart] = useState(false);
+    const [showEnd, setShowEnd] = useState(false);
+
+    const [checked, setChecked] = useState('daily');
+
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-
-    const [mapRegion, setmapRegion] = useState({
-        latitude: 48.4626,
-        longitude: -123.3105,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      });
-    const [markerCoord, setMarkerCoord] = useState({
-        latitude: 48.4626,
-        longitude: -123.3105,
-    });
-
-
     
      useEffect(() => {
         (async () => {
@@ -94,13 +91,21 @@ const Screen1 = ({navigation}) =>{
         //console.log(location.coords.latitude, location.coords.longitude)   
     };
 
-    const handleModal = () => setModalVisible(()=>!modalVisible);
-    const handleMapModal = () => setMapModal(()=>!mapModal);
-    const handleRegionChange = (region) => setmapRegion(region);
+    const handleModal = () => setModalVisible(()=>!modalVisible)
+    const handleStart = () => setShowStart(()=>!showStart)
+    const handleEnd = () => setShowEnd(()=>!showEnd)
 
-    // useEffect(()=>{
-    //     console.log(markerCoord)
-    // }, [markerCoord])
+    const onChangeStart = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShowStart(Platform.OS === 'ios');
+        setStartDate(currentDate);
+      };
+    const onChangeEnd = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShowEnd(Platform.OS === 'ios');
+        setEndDate(currentDate);
+      };
+          
 
     return(
 
@@ -110,43 +115,49 @@ const Screen1 = ({navigation}) =>{
                 style={styles.button}
                 onPress={handleModal}
             >
-                <Text style={styles.text2}>Chose things</Text>
+                <Text style={styles.buttonText}>Chose things</Text>
             </TouchableOpacity>
             <TouchableOpacity 
                 style={styles.button}
+                //onPress={()=>console.log('nothing')}
                 onPress={() =>
                     navigation.navigate('Maps', { name: 'test Maps' })
                 }
             >
-                <Text style={styles.text2}>Locate on map</Text>
+                <Text style={styles.buttonText}>Locate on map</Text>
             </TouchableOpacity>
             </View>
             <Modal isVisible={modalVisible}>
                 <View style={styles.modalContainer}>
+                    <View style={styles.modalSection}>
+                        <Text style={styles.text2}>Enter coordinates</Text>
+                    </View>
                     <View style={styles.rowContainer}>
                         <Text style={styles.text2}>Lat: </Text>
                         <TextInput
                             style={styles.textInput}
                             onChangeText={(val)=>dispatch(changeLat(val))}
                             keyboardType='numeric'
-                            
                             />
                         <Text style={styles.text2}>Lon: </Text>
                         <TextInput
                             style={styles.textInput}
                             onChangeText={(val)=>dispatch(changeLon(val))}
                             keyboardType='numeric'
-                            
                             />
-                    </View>
-                    <View style={styles.rowContainer}>
+                    {/* </View>
+                    <View style={styles.rowContainer}> */}
                         <TouchableOpacity
-                            style={styles.button}
+                            style={styles.modalButton}
                             onPress={handleGetLoc}
                         >
-                            <Text style={styles.text2}>Locate me</Text>
+                            <Text style={styles.buttonText}>Locate me</Text>
                         </TouchableOpacity>
+                        
             
+                    </View>
+                    <View style={styles.modalSection}>
+                        <Text style={styles.text2}>Choose Parameter</Text>
                     </View>
                     <View style={styles.rowContainer}>
                         <ModalSelector 
@@ -158,11 +169,60 @@ const Screen1 = ({navigation}) =>{
                             onChange={(val)=>dispatch(setParam(val.key))}
                         />
                     
-                    </View>        
+                    </View>       
+                    <View style={styles.modalSection}>
+                        <Text style={styles.text2}>Pick date range:</Text>
+                    </View> 
+                    <View style={styles.rowContainer}>
+                    
+                    <TouchableOpacity style={styles.modalButton} onPress={handleStart}>
+                        <Text style={styles.buttonText}>start date</Text>
+                    </TouchableOpacity>
+                    {showStart && (
+                        <DateTimePicker
+                        testID="dateTimePicker"
+                        value={startDate}
+                        mode={'date'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeStart}
+                        />
+                    )}
+                    <TouchableOpacity style={styles.modalButton} onPress={handleEnd}>
+                        <Text style={styles.buttonText}>end date</Text>
+                    </TouchableOpacity>
+                    {showEnd && (
+                        <DateTimePicker
+                        testID="dateTimePicker"
+                        value={endDate}
+                        mode={'date'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeEnd}
+                        />
+                    )}
                     </View>
+                    <View style={styles.modalSection}>
+                        <Text style={styles.text2}>Temporal resolution</Text>
+                    </View>
+                    <View style={styles.rowContainer}>
+                    <Text style={styles.text2}>Daily</Text>
+                    <RadioButton
+                            value="daily"
+                            status={ checked === 'daily' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('daily')}
+                        />
+                        <Text style={styles.text2}>Monthly</Text>
+                        <RadioButton
+                            value="monthly"
+                            status={ checked === 'monthly' ? 'checked' : 'unchecked' }
+                            onPress={() => setChecked('monthly')}
+                        />
+                    </View>
+                </View>
         
                     <TouchableOpacity style={styles.button} onPress={handleModal}>
-                        <Text style={styles.text2}>Submit</Text>
+                        <Text style={styles.buttonText}>Submit</Text>
                     </TouchableOpacity>
                 
                  

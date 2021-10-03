@@ -28,7 +28,7 @@ const HomeScreen = ({navigation}) =>{
                         navigation.navigate('TabNav', { name: 'test Screen1' })
                     }
                 >
-                <Text style={styles.text}> sploosh</Text>
+                <Text style={styles.buttonText}> sploosh</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
@@ -39,7 +39,7 @@ const HomeScreen = ({navigation}) =>{
                         navigation.navigate('TabNav', { name: 'test Screen1' })
                         }}
                 >
-                <Text style={styles.text}> sploosh new</Text>
+                <Text style={styles.buttonText}> sploosh new</Text>
             </TouchableOpacity>
            </View>
            </View>

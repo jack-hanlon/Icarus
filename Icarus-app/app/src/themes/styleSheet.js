@@ -23,13 +23,21 @@ const styles = StyleSheet.create({
     },
     text2:{
         color:colors.textPrimary,
-        margin:10,
+        marginLeft:5,
+        marginRight:3,
+        marginTop:13,
+        marginBottom:1,
     },
     textInput:{
         borderColor:'#000',
         borderWidth:1,
         width:Metrics.screenWidth*0.15,
-        margin:10
+        height: Metrics.screenHeight*0.05,
+        margin:1,
+        marginTop:10,
+        marginRight:5,
+        justifyContent:'center',
+        alignItems:'center',
     },
     logo: {
         width: 50,
@@ -96,7 +104,7 @@ const styles = StyleSheet.create({
         color:'#000'
     },
     modalContainer:{
-        flex:1,
+        flex:0.9,
         backgroundColor:'#9dcdfa',
         alignItems:'center',
         justifyContent:'center',
@@ -120,10 +128,26 @@ const styles = StyleSheet.create({
         marginBottom:15,
         borderRadius:20,
     },
-    scrollContainer:{
-        paddingVertical:20,
-        marginVertical:50,
-        backgroundColor:'#fad570'
+    buttonText:{
+        margin:1,
+        color:colors.textPrimary,
+        padding:4,
+    },
+    modalSection:{
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        margin:10,
+        width:Metrics.screenWidth*0.8,
+        alignItems:'center',
+    },
+    modalButton:{
+        alignItems: "center",
+        backgroundColor: "#9dcdfa",
+        borderWidth:2,
+        borderColor:"#000",
+        borderRadius:20,
+        
+        margin:5,
     }
 })
 
