@@ -18,7 +18,7 @@ const Screen2 = () =>{
         </TouchableOpacity>
       </View>
       <Text style={styles.pvText}>Calculated PV Panel Efficiency:</Text>
-      <View style={styles.recommendations}><Text style={styles.buttonText}>Placeholder for graph/data view</Text></View>
+      <View style={styles.recommendations}><Text style={styles.buttonText}>Typical Range: </Text></View>
       </View>
 
     )
