@@ -1,11 +1,12 @@
-import React from "react";
-import { View, Text, TextInput } from "react-native";
+import React, {useState, useEffect} from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
-import { changeLat } from '../../redux/actions/index'
+import { changeLat, changeLon } from '../../redux/actions/index'
 import { setParam } from "../../redux/actions/index";
 import { useSelector, useDispatch } from "react-redux";
 import ModalSelector from 'react-native-modal-selector'
+import Modal from "react-native-modal";
 
 import {
     VictoryChart as Chart,
@@ -19,6 +20,8 @@ import {
 
 import dataFormater from "../../utils/ApiDataFormater";
 import pickerData from "../assets/modalPickerData";
+import * as Location from 'expo-location';
+
 
 const dummyRawData = 
 {
@@ -31,36 +34,109 @@ const dummyRawData =
   "20210125": -3.67,"20210126": -2.56,"20210127": -4.12,"20210128": -7.61,
   
 };
+
+
 const dummyData = dataFormater(dummyRawData).data
 
 
 const Screen1 = () =>{
     const dispatch = useDispatch()
     const lat = useSelector(state=>state.coords.lat)
+    const lon = useSelector(state=>state.coords.lon)
     const param = useSelector(state=>state.param.param)
 
-    const handleChange = (val) =>{
+    const [modalVisible, setModalVisible] =  useState(false)
+    const [getLocation, setGetLocation] = useState(false)
 
-        console.log(val)
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+
+    
+     useEffect(() => {
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+                setErrorMsg('Permission to access location was denied');
+                return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+        })();
+        }, [getLocation]);
+
+    let text = 'Waiting..';
+    if (errorMsg) {
+        text = errorMsg;
+    } else if (location) {
+        text = JSON.stringify(location);
     }
+    const handleModal = () => setModalVisible(()=>!modalVisible)
+    const handleGetLoc = () =>{
+        setGetLocation(()=>!getLocation)
+        dispatch(changeLat(location.coords.latitude))
+        dispatch(changeLon(location.coords.longitude))
+        console.log(location.coords.latitude, location.coords.longitude)
+        
+        
+    } 
+
     return(
 
         <View style={styles.container}>
-            <Text style={styles.text}>Lat val {lat}</Text>
-    
-            <TextInput 
-                style={styles.textInput}
-                onChangeText={(val)=>dispatch(changeLat(val))}
-                keyboardType='numeric'
 
-                />
-            <ModalSelector 
-                data={pickerData}
-                initValue="Click to select param"
-                style={{marginTop:10}}
-                onChange={(val)=>dispatch(setParam(val.key))}
-            />
-            <Text style={styles.text2}>Selected Param: {param}</Text>
+            <TouchableOpacity 
+                style={styles.button}
+                onPress={handleModal}
+            >
+                <Text style={styles.text2}>Chose things</Text>
+            </TouchableOpacity>
+            <Modal isVisible={modalVisible}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.text2}>Lat: </Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onChangeText={(val)=>dispatch(changeLat(val))}
+                            keyboardType='numeric'
+                            
+                            />
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.text2}>Lon: </Text>
+                        <TextInput
+                            style={styles.textInput}
+                            onChangeText={(val)=>dispatch(changeLon(val))}
+                            keyboardType='numeric'
+                            
+                            />
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={handleGetLoc}
+                        >
+                            <Text style={styles.text2}>Locate me</Text>
+                        </TouchableOpacity>
+                        
+                    </View>
+                    <View style={styles.rowContainer}>
+                        <ModalSelector 
+                            data={pickerData}
+                            initValue="Click to select param"
+                            style={styles.modalPicker}
+                            onChange={(val)=>dispatch(setParam(val.key))}
+
+                        />
+                    
+                    </View>
+                    <TouchableOpacity style={styles.button} onPress={handleModal}>
+                        <Text style={styles.text2}>Submit</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
+            <Text style={styles.text2}>Things you have chosen:</Text>
+            <Text style={styles.text2}>Lat = {lat}   Lon = {lon}   Param = {param}</Text>
 
             <Chart 
                 width={Metrics.screenWidth * 0.8}

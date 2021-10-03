@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
         borderColor:'#000',
         borderWidth:1,
         width:150,
+        margin:10
     },
     logo: {
         width: 50,
@@ -93,6 +94,30 @@ const styles = StyleSheet.create({
         marginHorizontal:10,
         borderColor:'#000',
         color:'#000'
+    },
+    modalContainer:{
+        flex:1,
+        backgroundColor:'#9dcdfa',
+        alignItems:'center',
+        justifyContent:'center',
+    },
+    button:{
+        alignItems: "center",
+        backgroundColor: "#9dcdfa",
+        borderWidth:2,
+        borderColor:"#000",
+        borderRadius:20,
+        padding: 10,
+    },
+    rowContainer:{
+        flexDirection:'row',
+    },
+    modalPicker:{
+        borderColor:'#000',
+        color:'#000',
+        marginTop:15,
+        marginBottom:15,
+        borderRadius:20,
     }
 })
 

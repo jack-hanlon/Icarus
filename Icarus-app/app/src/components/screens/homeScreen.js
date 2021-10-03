@@ -14,14 +14,16 @@ const HomeScreen = ({navigation}) =>{
                     />
             </View>
             <View style={styles.homeScreenButtonBar}>
+            <View>
             <TouchableOpacity
-                style={styles.uploadButton}
+                style={styles.button}
                 onPress={() =>
                     navigation.navigate('TabNav', { name: 'test Screen1' })
                 }
             >
             <Text style={styles.text}> sploosh</Text>
            </TouchableOpacity>
+           </View>
             </View>
         </View>
     )
