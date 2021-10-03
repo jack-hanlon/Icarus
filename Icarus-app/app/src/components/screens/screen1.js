@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
 import { changeLat, changeLon } from '../../redux/actions/index'
@@ -15,12 +15,13 @@ import {
     VictoryBrushContainer as BrushContainer,
     createContainer,
     VictoryAxis,
-    VictoryArea,
     } from 'victory-native'
 
 import dataFormater from "../../utils/ApiDataFormater";
 import pickerData from "../assets/modalPickerData";
+
 import * as Location from 'expo-location';
+import MapView, { Marker } from 'react-native-maps';
 
 
 const dummyRawData = 
@@ -39,17 +40,30 @@ const dummyRawData =
 const dummyData = dataFormater(dummyRawData).data
 
 
-const Screen1 = () =>{
-    const dispatch = useDispatch()
-    const lat = useSelector(state=>state.coords.lat)
-    const lon = useSelector(state=>state.coords.lon)
-    const param = useSelector(state=>state.param.param)
+const Screen1 = ({navigation}) =>{
+    const dispatch = useDispatch();
+    const lat = useSelector(state=>state.coords.lat);
+    const lon = useSelector(state=>state.coords.lon);
+    const param = useSelector(state=>state.param.param);
 
-    const [modalVisible, setModalVisible] =  useState(false)
-    const [getLocation, setGetLocation] = useState(false)
+    const [modalVisible, setModalVisible] =  useState(false);
+    const [mapModal, setMapModal] = useState(false)
+    const [getLocation, setGetLocation] = useState(false);
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
+
+    const [mapRegion, setmapRegion] = useState({
+        latitude: 48.4626,
+        longitude: -123.3105,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    const [markerCoord, setMarkerCoord] = useState({
+        latitude: 48.4626,
+        longitude: -123.3105,
+    });
+
 
     
      useEffect(() => {
@@ -71,26 +85,41 @@ const Screen1 = () =>{
     } else if (location) {
         text = JSON.stringify(location);
     }
-    const handleModal = () => setModalVisible(()=>!modalVisible)
+
     const handleGetLoc = () =>{
         setGetLocation(()=>!getLocation)
         dispatch(changeLat(location.coords.latitude))
         dispatch(changeLon(location.coords.longitude))
-        console.log(location.coords.latitude, location.coords.longitude)
-        
-        
-    } 
+        //console.log(location.coords.latitude, location.coords.longitude)   
+    };
+
+    const handleModal = () => setModalVisible(()=>!modalVisible);
+    const handleMapModal = () => setMapModal(()=>!mapModal);
+    const handleRegionChange = (region) => setmapRegion(region);
+
+    // useEffect(()=>{
+    //     console.log(markerCoord)
+    // }, [markerCoord])
 
     return(
 
         <View style={styles.container}>
-
+            <View style={styles.rowContainer}>
             <TouchableOpacity 
                 style={styles.button}
                 onPress={handleModal}
             >
                 <Text style={styles.text2}>Chose things</Text>
             </TouchableOpacity>
+            <TouchableOpacity 
+                style={styles.button}
+                onPress={() =>
+                    navigation.navigate('Maps', { name: 'test Maps' })
+                }
+            >
+                <Text style={styles.text2}>Locate on map</Text>
+            </TouchableOpacity>
+            </View>
             <Modal isVisible={modalVisible}>
                 <View style={styles.modalContainer}>
                     <View style={styles.rowContainer}>
@@ -101,8 +130,6 @@ const Screen1 = () =>{
                             keyboardType='numeric'
                             
                             />
-                    </View>
-                    <View style={styles.rowContainer}>
                         <Text style={styles.text2}>Lon: </Text>
                         <TextInput
                             style={styles.textInput}
@@ -118,26 +145,42 @@ const Screen1 = () =>{
                         >
                             <Text style={styles.text2}>Locate me</Text>
                         </TouchableOpacity>
-                        
+            
                     </View>
                     <View style={styles.rowContainer}>
                         <ModalSelector 
+                            style={styles.modalPicker}
+                            touchableStyle={{borderColor:'#000',borderWidth:1}}
+                            selectTextStyle={{color:'#000'}}
                             data={pickerData}
                             initValue="Click to select param"
-                            style={styles.modalPicker}
                             onChange={(val)=>dispatch(setParam(val.key))}
-
                         />
                     
+                    </View>        
                     </View>
+        
                     <TouchableOpacity style={styles.button} onPress={handleModal}>
                         <Text style={styles.text2}>Submit</Text>
                     </TouchableOpacity>
-                </View>
+                
+                 
+                    
+                
             </Modal>
             <Text style={styles.text2}>Things you have chosen:</Text>
             <Text style={styles.text2}>Lat = {lat}   Lon = {lon}   Param = {param}</Text>
+    
+            {/* <MapView
+                style={{ alignSelf: 'stretch', flex:0.75}}
+                region={mapRegion}
+                //onRegionChange={handleRegionChange}
 
+            >
+                <Marker draggable
+                    coordinate={markerCoord} />
+            </MapView>
+             */}
             <Chart 
                 width={Metrics.screenWidth * 0.8}
                 height={Metrics.screenHeight * 0.3}

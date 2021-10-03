@@ -8,6 +8,7 @@ import { Screen1 } from './src/components/screens/screen1';
 import { TabNav } from './src/components/screens/tabNav';
 import { Provider } from 'react-redux';
 import store from './src/redux/store';
+import { Maps } from './src/components/screens/maps';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +25,17 @@ const App = () =>{
           <Stack.Screen
             name="TabNav" 
             component={TabNav} 
-            //options={{ headerShown: false }}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Maps" 
+            component={Maps} 
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Screen1" 
+            component={Screen1} 
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       </NavigationContainer>
