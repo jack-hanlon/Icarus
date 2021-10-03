@@ -8,14 +8,14 @@ import { changeLon, changeLat, setParam } from "../../redux/actions/index";
 const HomeScreen = ({navigation}) =>{
 
     const dispatch=useDispatch()
-    
+
     return(
         <View style={styles.container}>
-            
+
             <View style={styles.homeScreenImgcontainer}>
-                <Image 
-                    
-                    source={require('../assets/icarus.jpg')} 
+                <Image
+
+                    source={require('../assets/icarus.jpg')}
 
                     />
             </View>
@@ -28,7 +28,7 @@ const HomeScreen = ({navigation}) =>{
                         navigation.navigate('TabNav', { name: 'test Screen1' })
                     }
                 >
-                <Text style={styles.buttonText}> sploosh</Text>
+                <Text style={styles.buttonText}>Resume</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.button}
@@ -39,7 +39,7 @@ const HomeScreen = ({navigation}) =>{
                         navigation.navigate('TabNav', { name: 'test Screen1' })
                         }}
                 >
-                <Text style={styles.buttonText}> sploosh new</Text>
+                <Text style={styles.buttonText}>Begin</Text>
             </TouchableOpacity>
            </View>
            </View>

@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         position: 'absolute',
-        left: 150,
+        left: 165,
     },
     logoContainer: {
         position: 'absolute',
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "dodgerblue",
         height: 50,
-        width: 150,
+        width: 120,
         padding: 10,
     },
     uploadButtonText: {
