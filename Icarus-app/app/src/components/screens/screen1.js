@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import { View, Text, TextInput, TouchableOpacity, Button } from "react-native";
+import {Image, View, Text, TextInput, TouchableOpacity, Button } from "react-native";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
 import { changeLat, changeLon } from '../../redux/actions/index'
@@ -26,7 +26,7 @@ import * as Location from 'expo-location';
 const format_url = (temp_res,param, lon, lat) => `https://power.larc.nasa.gov/api/temporal/${temp_res}/point?parameters=${param}&community=RE&longitude=${lon}&latitude=${lat}&start=20210101&end=20210730&format=JSON`;
 
 
-const dummyRawData = 
+const dummyRawData =
 {
   "20210101": -0.65,"20210102": 0.16,"20210103": -0.98,"20210104": -0.17,
   "20210105": -0.41,"20210106": -0.94,"20210107": -2.08,"20210108": -4.16,
@@ -35,7 +35,7 @@ const dummyRawData =
   "20210117": 0.67,"20210118": -1.07,"20210119": -1.1,"20210120": -4.37,
   "20210121": -0.32,"20210122": -1.59,"20210123": -6.02,"20210124": -5.99,
   "20210125": -3.67,"20210126": -2.56,"20210127": -4.12,"20210128": -7.61,
-  
+
 };
 
 
@@ -63,7 +63,7 @@ const Screen1 = ({navigation}) =>{
 
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
-    
+
      useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
@@ -88,7 +88,7 @@ const Screen1 = ({navigation}) =>{
         setGetLocation(()=>!getLocation)
         dispatch(changeLat(location.coords.latitude))
         dispatch(changeLon(location.coords.longitude))
-        //console.log(location.coords.latitude, location.coords.longitude)   
+        //console.log(location.coords.latitude, location.coords.longitude)
     };
 
     const handleModal = () => setModalVisible(()=>!modalVisible)
@@ -105,26 +105,32 @@ const Screen1 = ({navigation}) =>{
         setShowEnd(Platform.OS === 'ios');
         setEndDate(currentDate);
       };
-          
+
 
     return(
 
         <View style={styles.container}>
+        <View style={styles.logoContainer}>
+          <Text style={styles.logoText}>ICARUS</Text>
+          <Image style={styles.logo} source={require('../assets/icarus.jpg')}/>
+          <Text>Data Access Viewer</Text>
+        </View>
             <View style={styles.rowContainer}>
-            <TouchableOpacity 
+
+            <TouchableOpacity
                 style={styles.button}
                 onPress={handleModal}
             >
-                <Text style={styles.buttonText}>Chose things</Text>
+                <Text style={styles.buttonText}>Manual Selection</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
                 style={styles.button}
                 //onPress={()=>console.log('nothing')}
                 onPress={() =>
                     navigation.navigate('Maps', { name: 'test Maps' })
                 }
             >
-                <Text style={styles.buttonText}>Locate on map</Text>
+                <Text style={styles.buttonText}>Use Google Map</Text>
             </TouchableOpacity>
             </View>
             <Modal isVisible={modalVisible}>
@@ -153,14 +159,14 @@ const Screen1 = ({navigation}) =>{
                         >
                             <Text style={styles.buttonText}>Locate me</Text>
                         </TouchableOpacity>
-                        
-            
+
+
                     </View>
                     <View style={styles.modalSection}>
                         <Text style={styles.text2}>Choose Parameter</Text>
                     </View>
                     <View style={styles.rowContainer}>
-                        <ModalSelector 
+                        <ModalSelector
                             style={styles.modalPicker}
                             touchableStyle={{borderColor:'#000',borderWidth:1}}
                             selectTextStyle={{color:'#000'}}
@@ -168,13 +174,13 @@ const Screen1 = ({navigation}) =>{
                             initValue="Click to select param"
                             onChange={(val)=>dispatch(setParam(val.key))}
                         />
-                    
-                    </View>       
+
+                    </View>
                     <View style={styles.modalSection}>
                         <Text style={styles.text2}>Pick date range:</Text>
-                    </View> 
+                    </View>
                     <View style={styles.rowContainer}>
-                    
+
                     <TouchableOpacity style={styles.modalButton} onPress={handleStart}>
                         <Text style={styles.buttonText}>start date</Text>
                     </TouchableOpacity>
@@ -220,18 +226,18 @@ const Screen1 = ({navigation}) =>{
                         />
                     </View>
                 </View>
-        
+
                     <TouchableOpacity style={styles.button} onPress={handleModal}>
                         <Text style={styles.buttonText}>Submit</Text>
                     </TouchableOpacity>
-                
-                 
-                    
-                
+
+
+
+
             </Modal>
-            <Text style={styles.text2}>Things you have chosen:</Text>
+            <Text style={styles.text2}>Parameters selected:</Text>
             <Text style={styles.text2}>Lat = {lat}   Lon = {lon}   Param = {param}</Text>
-    
+
             {/* <MapView
                 style={{ alignSelf: 'stretch', flex:0.75}}
                 region={mapRegion}
@@ -242,17 +248,17 @@ const Screen1 = ({navigation}) =>{
                     coordinate={markerCoord} />
             </MapView>
              */}
-            <Chart 
+            <Chart
                 width={Metrics.screenWidth * 0.8}
                 height={Metrics.screenHeight * 0.3}
                 scale={{x: "time", y: "linear"}}
                 >
-                
+
                 <VictoryAxis fixLabelOverlap={true} />
-                <Line data={dummyData} x="date" y="data"/>   
+                <Line data={dummyData} x="date" y="data"/>
             </Chart>
-            
-        </View> 
+
+        </View>
     )
 };
 
