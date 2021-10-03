@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     textInput:{
         borderColor:'#000',
         borderWidth:1,
-        width:150,
+        width:Metrics.screenWidth*0.15,
         margin:10
     },
     logo: {
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
         borderColor:"#000",
         borderRadius:20,
         padding: 10,
+        margin:5,
     },
     rowContainer:{
         flexDirection:'row',
@@ -118,6 +119,11 @@ const styles = StyleSheet.create({
         marginTop:15,
         marginBottom:15,
         borderRadius:20,
+    },
+    scrollContainer:{
+        paddingVertical:20,
+        marginVertical:50,
+        backgroundColor:'#fad570'
     }
 })
 
