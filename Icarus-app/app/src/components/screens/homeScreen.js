@@ -2,7 +2,13 @@ import React from "react";
 import { View, Text, Button, Image, TouchableOpacity, TextInput } from "react-native";
 import { styles } from "../../themes/styleSheet"
 
+import { useDispatch, useSelector } from "react-redux";
+import { changeLon, changeLat, setParam } from "../../redux/actions/index";
+
 const HomeScreen = ({navigation}) =>{
+
+    const dispatch=useDispatch()
+    
     return(
         <View style={styles.container}>
             
@@ -15,16 +21,29 @@ const HomeScreen = ({navigation}) =>{
             </View>
             <View style={styles.homeScreenButtonBar}>
             <View>
-            <TouchableOpacity
-                style={styles.button}
-                onPress={() =>
-                    navigation.navigate('TabNav', { name: 'test Screen1' })
-                }
-            >
-            <Text style={styles.text}> sploosh</Text>
-           </TouchableOpacity>
+            <View style={styles.rowContainer}>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={() =>
+                        navigation.navigate('TabNav', { name: 'test Screen1' })
+                    }
+                >
+                <Text style={styles.text}> sploosh</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={()=>{
+                        dispatch(changeLon(null))
+                        dispatch(changeLat(null))
+                        dispatch(setParam(null))
+                        navigation.navigate('TabNav', { name: 'test Screen1' })
+                        }}
+                >
+                <Text style={styles.text}> sploosh new</Text>
+            </TouchableOpacity>
            </View>
-            </View>
+           </View>
+        </View>
         </View>
     )
 };

@@ -27,13 +27,11 @@ const Maps = ({navigation}) =>{
     const handleSubmit = () =>{
         dispatch(changeLat(markerCoord.latitude))
         dispatch(changeLon(markerCoord.longitude))
-        console.log(lat, lon)
     }
-    console.log(markerCoord)
     return(
         <View style={styles.container}>
             <MapView
-                style={{alignSelf:'stretch', flex:0.7}}
+                style={{alignSelf:'stretch', flex:0.9}}
                 initialRegion={mapRegion}
                 onRegionChange={(region)=>setmapRegion}
             >
@@ -49,14 +47,14 @@ const Maps = ({navigation}) =>{
             >
                 <Text style={styles.text2}>Use coordinate</Text>
             </TouchableOpacity>
-            <TouchableOpacity 
+            {/* <TouchableOpacity 
                 style={styles.button}
                 onPress={() =>
                     navigation.navigate('TabNav', { name: 'test Screen1' })
                 }
             >
                 <Text style={styles.text2}>Back to graphs</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     )
 };

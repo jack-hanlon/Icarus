@@ -41,6 +41,7 @@ const dummyData = dataFormater(dummyRawData).data
 
 
 const Screen1 = ({navigation}) =>{
+    
     const dispatch = useDispatch();
     const lat = useSelector(state=>state.coords.lat);
     const lon = useSelector(state=>state.coords.lon);
