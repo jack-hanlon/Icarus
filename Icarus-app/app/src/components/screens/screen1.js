@@ -2,8 +2,7 @@ import React, {useState, useEffect} from "react";
 import { View, Text, TextInput, TouchableOpacity, Button } from "react-native";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
-import { changeLat, changeLon } from '../../redux/actions/index'
-import { setParam } from "../../redux/actions/index";
+import { changeLat, changeLon, setStartDate, setEndDate, setTempRes, setParam } from '../../redux/actions/index'
 import { useSelector, useDispatch } from "react-redux";
 import ModalSelector from 'react-native-modal-selector'
 import Modal from "react-native-modal";
@@ -48,13 +47,15 @@ const Screen1 = ({navigation}) =>{
     const lat = useSelector(state=>state.coords.lat);
     const lon = useSelector(state=>state.coords.lon);
     const param = useSelector(state=>state.param.param);
+    const startDate = useSelector(state=>state.dates.startDate)
+    const endDate = useSelector(state=>state.dates.endDate)
+    const tempRes = useSelector(state=>state.tempRes.temp_res)
 
     const [modalVisible, setModalVisible] =  useState(false);
-    const [mapModal, setMapModal] = useState(false)
     const [getLocation, setGetLocation] = useState(false);
 
-    const [startDate, setStartDate] = useState(new Date(1598051730000));
-    const [endDate, setEndDate] = useState(new Date(1598051730000));
+    // const [startDate, setStartDate] = useState(new Date());
+    // const [endDate, setEndDate] = useState(new Date(1598051730000));
     //const [mode, setMode] = useState('date');
     const [showStart, setShowStart] = useState(false);
     const [showEnd, setShowEnd] = useState(false);
