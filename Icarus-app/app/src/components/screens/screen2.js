@@ -1,10 +1,15 @@
-import React from "react";
+import React, {useState} from "react";
 import {SafeAreaView,Button,TouchableOpacity,Text,View,ImageBackground, StyleSheet,Image} from 'react-native'
 import { styles } from "../../themes/styleSheet";
+import Modal from 'react-native-modal'
+
 
 const Screen2 = () =>{
+
+    const [modalVisible, setModalVisible] = useState(false)
+    const toggleModal = () => setModalVisible(()=>!modalVisible)
     return(
-      <View style={styles.screenContainer}>
+      <View style={styles.container}>
         <View style={styles.logoContainer}>
           <Text style={styles.logoText}>ICARUS</Text>
           <Image style={styles.logo} source={require('../assets/icarus.jpg')}/>
@@ -13,9 +18,17 @@ const Screen2 = () =>{
 
         <View style={styles.bodyContainer}>
 
-        <TouchableOpacity style={styles.uploadButton}>
+        <TouchableOpacity style={styles.uploadButton} onPress={toggleModal}>
           <Text style={styles.uploadButtonText}>Upload</Text>
         </TouchableOpacity>
+        <Modal isVisible={modalVisible}>
+          <View>
+            <Text>Add things!!!</Text>
+            <TouchableOpacity style={styles.uploadButton} onPress={toggleModal}>
+              <Text style={styles.uploadButtonText}>Submit</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </View>
       <Text style={styles.pvText}>Calculated PV Panel Efficiency:</Text>
       <View style={styles.recommendations}><Text style={styles.buttonText}>Typical Range: </Text></View>

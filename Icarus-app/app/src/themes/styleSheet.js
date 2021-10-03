@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
     uploadButton: {
         alignItems: "center",
         backgroundColor: "dodgerblue",
-        height: 50,
-        width: 120,
+        // height: 50,
+        // width: 120,
         padding: 10,
     },
     uploadButtonText: {

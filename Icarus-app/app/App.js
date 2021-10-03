@@ -28,7 +28,7 @@ const App = () =>{
             <Stack.Screen
               name="TabNav" 
               component={TabNav} 
-              //options={{ headerShown: false }}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="Maps" 
