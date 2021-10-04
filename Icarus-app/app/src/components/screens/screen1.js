@@ -57,8 +57,9 @@ const Screen1 = ({navigation}) =>{
     const tempRes = useSelector(state=>state.tempRes.temp_res)
     
 // store data from fetch request
-    const [data, setData] = useState()
+    const [data, setData] = useState(dummyData)
 
+    const [showGraph, setShowGraph] = useState(false)
 // Modal view boolean
     const [modalVisible, setModalVisible] =  useState(false);
 
@@ -114,6 +115,7 @@ const Screen1 = ({navigation}) =>{
     const handleModal = () => setModalVisible(()=>!modalVisible)
     const handleStart = () => setShowStart(()=>!showStart)
     const handleEnd = () => setShowEnd(()=>!showEnd)
+    const handleGraph = () => setShowGraph(()=>!showGraph)
 
 // Handle Calendar  dates
     const onChangeStart = (event, selectedDate) => {
@@ -133,40 +135,40 @@ const Screen1 = ({navigation}) =>{
     //   console.log(store.getState())
 // Fetch form POWER API
 
-// const updateData = (response) => {
-//     // Takes the response of the api call, extracts, splits
-//     // then updates data states for plotting
+const updateData = (response) => {
+    // Takes the response of the api call, extracts, splits
+    // then updates data states for plotting
     
-//     if(parameterName == 'T2M'){
-//       const T2M = response.data.properties.parameter.T2M
-//       console.log(T2M)
-//       const dates = Object.keys(T2M)
-//       const temps = Object.keys(T2M)
-//       setLabel(dates), setData(temps)
-//     }
-//    else if (parameterName == 'ALLSKY_SFC_SW_DWN') {
-//     const Flux = response.data.properties.parameter.ALLSKY_SFC_SW_DWN
-//     console.log(Flux)
-//     const dates = Object.keys(Flux)
-//     const flux = Object.keys(Flux)
-//     setLabel(dates), setData(flux)
-//    } 
+    if(param== 'T2M'){
+      const T2M = response.data.properties.parameter.T2M
+      //console.log(T2M)
+      const dataFormated =dataFormater(T2M).data
+      console.log(dataFormated)
+      setData(dataFormated)
+    }
+   else if (param == 'ALLSKY_SFC_SW_DWN') {
+    const Flux = response.data.properties.parameter.ALLSKY_SFC_SW_DWN
+    const dataFormated =dataFormater(Flux).data
+      //console.log(dataFormated)
+    setData(dataFormated)
+    //setLabel(dates), setData(flux)
+   } 
 
-//    else {
-//      return;
-//    }
-//   };
+   else {
+     return;
+   }
+  };
   
 const apiCall = () => {
     const data_url = format_url(tempRes, param, lon, lat, startDate, endDate)
     console.log(data_url)
-    // axios.get(data_url)
-    //   .then(response => {
-    //     //console.log(response)
-    //     updateData(response);
-    // }, error => {
-    //   console.log(error)
-    // });
+    axios.get(data_url)
+      .then(response => {
+        //console.log(response)
+        updateData(response);
+    }, error => {
+      console.log(error)
+    });
   }
 
 //   const apiCallAsync = async () => {
@@ -185,16 +187,17 @@ const apiCall = () => {
         apiCall
   }
 
-
+    
     return(
 
         <View style={styles.container}>
+        
         <View style={styles.logoContainer}>
           <Text style={styles.logoText}>ICARUS</Text>
           <Image style={styles.logo} source={require('../assets/icarus.jpg')}/>
           <Text>Data Access Viewer</Text>
         </View>
-            <View style={styles.rowContainer}>
+        <View style={styles.rowContainer}>
 
             <TouchableOpacity
                 style={styles.button}
@@ -223,12 +226,14 @@ const apiCall = () => {
                             style={styles.textInput}
                             onChangeText={(val)=>dispatch(changeLat(val))}
                             keyboardType='numeric'
+                            placeholder={lat.toString()}
                             />
                         <Text style={styles.text2}>Lon: </Text>
                         <TextInput
                             style={styles.textInput}
                             onChangeText={(val)=>dispatch(changeLon(val))}
                             keyboardType='numeric'
+                            placeholder={lon.toString()}
                             />
                     {/* </View>
                     <View style={styles.rowContainer}> */}
@@ -313,21 +318,14 @@ const apiCall = () => {
 
 
             </Modal>
+            <View>
             <Text style={styles.text2}>Parameters selected:</Text>
             <Text style={styles.text2}>Lat = {lat}   Lon = {lon}   Param = {param}</Text>
             <TouchableOpacity style={styles.button} onPress={apiCall}>
                 <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
-            {/* <MapView
-                style={{ alignSelf: 'stretch', flex:0.75}}
-                region={mapRegion}
-                //onRegionChange={handleRegionChange}
-
-            >
-                <Marker draggable
-                    coordinate={markerCoord} />
-            </MapView>
-             */}
+            </View>
+            
             <Chart
                 width={Metrics.screenWidth * 0.8}
                 height={Metrics.screenHeight * 0.3}
@@ -335,7 +333,7 @@ const apiCall = () => {
                 >
 
                 <VictoryAxis fixLabelOverlap={true} />
-                <Line data={dummyData} x="date" y="data"/>
+                <Line data={data} x="date" y="data"/>
             </Chart>
 
         </View>

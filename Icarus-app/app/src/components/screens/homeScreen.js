@@ -33,8 +33,8 @@ const HomeScreen = ({navigation}) =>{
                 <TouchableOpacity
                     style={styles.button}
                     onPress={()=>{
-                        dispatch(changeLon(null))
-                        dispatch(changeLat(null))
+                        dispatch(changeLon(0))
+                        dispatch(changeLat(0))
                         dispatch(setParam(null))
                         navigation.navigate('TabNav', { name: 'test Screen1' })
                         }}
