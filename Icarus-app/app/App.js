@@ -26,16 +26,16 @@ const App = () =>{
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="TabNav" 
-              component={TabNav} 
+              name="TabNav"
+              component={TabNav}
               options={{ headerShown: false }}
             />
             <Stack.Screen
-              name="Maps" 
-              component={Maps} 
+              name="Maps"
+              component={Maps}
               //options={{ headerShown: false }}
             />
-          
+
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
