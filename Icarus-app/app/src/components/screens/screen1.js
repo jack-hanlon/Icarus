@@ -385,8 +385,13 @@ useEffect(()=>{
             </TouchableOpacity>
             </View>
             <Chart
+<<<<<<< HEAD
                 width={Metrics.screenWidth * 0.8}
                 height={Metrics.screenHeight * 0.5}
+=======
+                width={Metrics.screenWidth * 0.9}
+                height={Metrics.screenHeight * 0.3}
+>>>>>>> 387b2f63b249d8f497604682cb7320e097c361dc
                 scale={{x: "time", y: "linear"}}
                 containerComponent={
                     <VictoryVoronoiContainer

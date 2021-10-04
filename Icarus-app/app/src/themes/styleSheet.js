@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         color: "#FFF"
     },
     recommendations: {
-        backgroundColor: "dodgerblue",
+        backgroundColor: "#145DA0",
         width: '80%',
         height: '50%',
         bottom: 50,
