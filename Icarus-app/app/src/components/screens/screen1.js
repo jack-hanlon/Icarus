@@ -321,6 +321,7 @@ const apiCall = () => {
             <View>
             <Text style={styles.text2}>Parameters selected:</Text>
             <Text style={styles.text2}>Lat = {lat}   Lon = {lon}   Param = {param}</Text>
+            <Text style={styles.text2}>Start date: {startDate}   end date: {endDate}</Text>
             <TouchableOpacity style={styles.button} onPress={apiCall}>
                 <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
