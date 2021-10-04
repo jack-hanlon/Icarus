@@ -31,7 +31,7 @@ const Screen2 = () =>{
     const toggleModal = () => setModalVisible(()=>!modalVisible)
 
     const [checked, setChecked] = useState('daily');
-    
+
     return(
       <View style={styles.container}>
         <View style={styles.logoContainer}>
@@ -48,16 +48,16 @@ const Screen2 = () =>{
         <Modal isVisible={modalVisible}>
           <View style={styles.modalContainer}>
             <View style={styles.modalSection}>
-                <Text style={styles.text2}>Enter coordinates</Text>
+                <Text style={styles.text}>Enter coordinates</Text>
             </View>
             <View style={styles.rowContainer}>
-                <Text style={styles.text2}>Lat: </Text>
+                <Text style={styles.text}>Lat: </Text>
                 <TextInput
                     style={styles.textInput}
                     onChangeText={(val)=>dispatch(changeLat(val))}
                     keyboardType='numeric'
                     />
-                <Text style={styles.text2}>Lon: </Text>
+                <Text style={styles.text}>Lon: </Text>
                 <TextInput
                     style={styles.textInput}
                     onChangeText={(val)=>dispatch(changeLon(val))}
@@ -67,7 +67,7 @@ const Screen2 = () =>{
 
             </View>
             <View style={styles.modalSection}>
-                <Text style={styles.text2}>Select Brand</Text>
+                <Text style={styles.text}>Select Brand</Text>
             </View>
             <View style={styles.rowContainer}>
                 <ModalSelector
@@ -81,21 +81,27 @@ const Screen2 = () =>{
 
             </View>
             <View style={styles.modalSection}>
-            <Text style={styles.text2}>Net Panel Surface Area</Text>
+            <Text style={styles.text}>Net Panel Surface Area ( m^2 )</Text>
+
             </View>
               <View style={styles.rowContainer}>
+              <TextInput
+                  style={styles.textInput}
+                  keyboardType='numeric'
+
+                  />
             </View>
             <View style={styles.modalSection}>
-                <Text style={styles.text2}>Temporal resolution</Text>
+                <Text style={styles.text}>Temporal resolution</Text>
             </View>
             <View style={styles.rowContainer}>
-            <Text style={styles.text2}>Daily</Text>
+            <Text style={styles.text}>Daily</Text>
             <RadioButton
                     value="daily"
                     status={ checked === 'daily' ? 'checked' : 'unchecked' }
                     onPress={() => setChecked('daily')}
                 />
-                <Text style={styles.text2}>Monthly</Text>
+                <Text style={styles.text}>Monthly</Text>
                 <RadioButton
                     value="monthly"
                     status={ checked === 'monthly' ? 'checked' : 'unchecked' }
