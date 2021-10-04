@@ -3,7 +3,7 @@ import { View, Text, Button, Image, TouchableOpacity, TextInput } from "react-na
 import { styles } from "../../themes/styleSheet"
 
 import { useDispatch, useSelector } from "react-redux";
-import { changeLon, changeLat, setParam } from "../../redux/actions/index";
+import { changeLon, changeLat, setParam, setTempRes, setEndDate, setStartDate } from "../../redux/actions/index";
 
 const HomeScreen = ({navigation}) =>{
 
@@ -36,6 +36,9 @@ const HomeScreen = ({navigation}) =>{
                         dispatch(changeLon(0))
                         dispatch(changeLat(0))
                         dispatch(setParam(null))
+                        dispatch(setTempRes('daily'))
+                        dispatch(setStartDate(null))
+                        dispatch(setEndDate(null))
                         navigation.navigate('TabNav', { name: 'test Screen1' })
                         }}
                 >

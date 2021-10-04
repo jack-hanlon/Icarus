@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Image, View, Text, TextInput, TouchableOpacity, Button } from "react-native";
+import {Image, View, Text, TextInput, TouchableOpacity,  Alert } from "react-native";
 import axios from "axios";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
@@ -12,10 +12,12 @@ import { RadioButton } from 'react-native-paper';
 import {
     VictoryChart as Chart,
     VictoryLine as Line,
-    VictoryZoomContainer as ZoomContainer,
-    VictoryBrushContainer as BrushContainer,
+    VictoryZoomContainer,
+    VictoryBrushContainer,
     createContainer,
     VictoryAxis,
+    VictoryVoronoi,
+    VictoryVoronoiContainer,
     } from 'victory-native'
 
 import convertDate from "../../utils/dateTimeToInt";
@@ -59,7 +61,10 @@ const Screen1 = ({navigation}) =>{
 // store data from fetch request
     const [data, setData] = useState(dummyData)
 
-    const [showGraph, setShowGraph] = useState(false)
+// layer graph containers and set domain
+    const VictoryZoomVoronoiContainer = createContainer("zoom", "voronoi");
+    const [zoomDomain, setZoomDomain] = useState(
+        {x:[new Date("2020-02-10"),new Date("2020-02-19")]})
 // Modal view boolean
     const [modalVisible, setModalVisible] =  useState(false);
 
@@ -116,6 +121,9 @@ const Screen1 = ({navigation}) =>{
     const handleStart = () => setShowStart(()=>!showStart)
     const handleEnd = () => setShowEnd(()=>!showEnd)
     const handleGraph = () => setShowGraph(()=>!showGraph)
+    const handleZoomDomain = (domain) =>{
+        setZoomDomain(domain)      
+      }
 
 // Handle Calendar  dates
     const onChangeStart = (event, selectedDate) => {
@@ -123,7 +131,7 @@ const Screen1 = ({navigation}) =>{
         setShowStart(Platform.OS === 'ios');
         const goodDate = convertDate(currentDate, tempRes)
         dispatch(setStartDate(goodDate))
-
+        
       };
     const onChangeEnd = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -141,11 +149,15 @@ const updateData = (response) => {
 
     if(param== 'T2M'){
       const T2M = response.data.properties.parameter.T2M
-      //console.log(T2M)
+      console.log(store.getState())
       const dataFormated =dataFormater(T2M).data
-      console.log(dataFormated)
+    //   const zoomDomainBounds = findZoomWindow()
+    //   const window = [{x:[zoomDomainBounds[0].date, zoomDomainBounds[1].date],
+    //                    }]
+    //   setZoomDomain(window)
       setData(dataFormated)
     }
+    
    else if (param == 'ALLSKY_SFC_SW_DWN') {
     const Flux = response.data.properties.parameter.ALLSKY_SFC_SW_DWN
     const dataFormated =dataFormater(Flux).data
@@ -153,23 +165,65 @@ const updateData = (response) => {
     setData(dataFormated)
     //setLabel(dates), setData(flux)
    }
+   else if(param== 'CLOUD_AMT'){    
+    const Cloud = response.data.properties.parameter.CLOUD_AMT
+            //console.log(T2M)
+    const dataFormated =dataFormater(Cloud).data
+    setData(dataFormated)
+    }
+    
+  
 
    else {
      return;
    }
   };
 
-const apiCall = () => {
-    const data_url = format_url(tempRes, param, lon, lat, startDate, endDate)
-    console.log(data_url)
-    axios.get(data_url)
-      .then(response => {
-        //console.log(response)
-        updateData(response);
-    }, error => {
-      console.log(error)
-    });
-  }
+useEffect(()=>{
+
+})
+    const apiCall = () => {
+        const data_url = format_url(tempRes, param, lon, lat, startDate, endDate)
+        //console.log(data_url)
+        if(param==='CLOUD_AMT' && tempRes ==='daily'){
+            Alert.alert(
+                "Probelm",
+                `Cloud amount data only exists for monthly temporal resolution. Please Retry`,
+                [
+                  {
+                    text: "Cancel",
+                    //onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                  },
+                  { text: "OK", //onPress: () => console.log("OK Pressed") 
+                }
+                ]
+              );
+            return
+        }
+        if(endDate < startDate){
+            Alert.alert(
+                "Probelm",
+                `end date is smaller than start date. Please Retry`,
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                  },
+                  { text: "OK", onPress: () => console.log("OK Pressed") }
+                ]
+              );
+            return
+        }
+        axios.get(data_url)
+        .then(response => {
+            //console.log(response)
+            updateData(response);
+        }, error => {
+        console.log(error)
+        });
+    }
 
 //   const apiCallAsync = async () => {
 //     const data_url = format_url(tempRes, param, lon, lat, startDate, endDate)
@@ -182,9 +236,13 @@ const apiCall = () => {
 //     }
 // }
 
-//  // Handle Submit button
-  const handleSubmit = () =>{
-        apiCall
+  const findZoomWindow = () =>{
+      const length = data.length
+      const halfIdx = Math.floor(length/2)
+      const rangeWidth = Math.floor(length*0.1)
+      const x_low = data[halfIdx]
+      const x_high = data[halfIdx+rangeWidth]
+      return [x_low, x_high]
   }
 
 
@@ -326,16 +384,58 @@ const apiCall = () => {
                 <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
             </View>
-
             <Chart
                 width={Metrics.screenWidth * 0.8}
-                height={Metrics.screenHeight * 0.3}
+                height={Metrics.screenHeight * 0.5}
                 scale={{x: "time", y: "linear"}}
+                containerComponent={
+                    <VictoryVoronoiContainer
+                    labels={({ datum }) => `${datum.date.getDate()},${datum.date.getMonth()},${datum.date.getFullYear()}, ${datum.data}`}
+                    />
+                }
                 >
-
+                {/* <VictoryAxis dependentAxis/> */}
                 <VictoryAxis fixLabelOverlap={true} />
                 <Line data={data} x="date" y="data"/>
             </Chart>
+            {/* <ScrollView>
+            <View>
+            <Chart
+                width={Metrics.screenWidth * 0.8}
+                height={Metrics.screenHeight * 0.5}
+                scale={{x: "time", y: "linear"}}
+                containerComponent={
+                    <VictoryZoomVoronoiContainer
+                        labels={({ datum }) => `${datum.date}, ${datum.data}`}
+                        zoomDimension="x"
+                        zoomDomain={zoomDomain}
+                        onZoomDomainChange={handleZoomDomain}
+                        />
+                    }
+                >
+                <VictoryAxis fixLabelOverlap={true} />
+                <Line data={data} x="date" y="data"/>
+            </Chart>
+            <Chart
+                width={Metrics.screenWidth * 0.8}
+                height={Metrics.screenHeight * 0.1}
+                
+                padding={{ top: 10, left: 20, right: 50, bottom: 30 }}
+                scale={{x: "time", y: "linear"}}
+                containerComponent={
+                    <VictoryBrushContainer
+                        brushDimension="x"
+                        brushDomain={zoomDomain}
+                        onBrushDomainChange={handleZoomDomain}
+                    />
+                }
+                >
+                <VictoryAxis fixLabelOverlap={true} />
+                <Line data={data} x="date" y="data"/>
+            </Chart>
+        
+            </View>
+            </ScrollView> */}
 
         </View>
     )
