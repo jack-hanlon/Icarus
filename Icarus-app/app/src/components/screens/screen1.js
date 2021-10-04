@@ -122,7 +122,7 @@ const Screen1 = ({navigation}) =>{
     const handleEnd = () => setShowEnd(()=>!showEnd)
     const handleGraph = () => setShowGraph(()=>!showGraph)
     const handleZoomDomain = (domain) =>{
-        setZoomDomain(domain)      
+        setZoomDomain(domain)
       }
 
 // Handle Calendar  dates
@@ -131,7 +131,7 @@ const Screen1 = ({navigation}) =>{
         setShowStart(Platform.OS === 'ios');
         const goodDate = convertDate(currentDate, tempRes)
         dispatch(setStartDate(goodDate))
-        
+
       };
     const onChangeEnd = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -157,7 +157,7 @@ const updateData = (response) => {
     //   setZoomDomain(window)
       setData(dataFormated)
     }
-    
+
    else if (param == 'ALLSKY_SFC_SW_DWN') {
     const Flux = response.data.properties.parameter.ALLSKY_SFC_SW_DWN
     const dataFormated =dataFormater(Flux).data
@@ -165,14 +165,14 @@ const updateData = (response) => {
     setData(dataFormated)
     //setLabel(dates), setData(flux)
    }
-   else if(param== 'CLOUD_AMT'){    
+   else if(param== 'CLOUD_AMT'){
     const Cloud = response.data.properties.parameter.CLOUD_AMT
             //console.log(T2M)
     const dataFormated =dataFormater(Cloud).data
     setData(dataFormated)
     }
-    
-  
+
+
 
    else {
      return;
@@ -195,7 +195,7 @@ useEffect(()=>{
                     //onPress: () => console.log("Cancel Pressed"),
                     style: "cancel"
                   },
-                  { text: "OK", //onPress: () => console.log("OK Pressed") 
+                  { text: "OK", //onPress: () => console.log("OK Pressed")
                 }
                 ]
               );
@@ -385,13 +385,8 @@ useEffect(()=>{
             </TouchableOpacity>
             </View>
             <Chart
-<<<<<<< HEAD
-                width={Metrics.screenWidth * 0.8}
-                height={Metrics.screenHeight * 0.5}
-=======
                 width={Metrics.screenWidth * 0.9}
-                height={Metrics.screenHeight * 0.3}
->>>>>>> 387b2f63b249d8f497604682cb7320e097c361dc
+                height={Metrics.screenHeight * 0.2}
                 scale={{x: "time", y: "linear"}}
                 containerComponent={
                     <VictoryVoronoiContainer
@@ -424,7 +419,7 @@ useEffect(()=>{
             <Chart
                 width={Metrics.screenWidth * 0.8}
                 height={Metrics.screenHeight * 0.1}
-                
+
                 padding={{ top: 10, left: 20, right: 50, bottom: 30 }}
                 scale={{x: "time", y: "linear"}}
                 containerComponent={
@@ -438,7 +433,7 @@ useEffect(()=>{
                 <VictoryAxis fixLabelOverlap={true} />
                 <Line data={data} x="date" y="data"/>
             </Chart>
-        
+
             </View>
             </ScrollView> */}
 

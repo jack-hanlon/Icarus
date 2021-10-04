@@ -60,20 +60,27 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     uploadButton: {
-        alignItems: "center",
-        backgroundColor: "dodgerblue",
-        // height: 50,
-        // width: 120,
-        padding: 10,
+      alignItems: "center",
+      backgroundColor: "#145DA0",
+      borderWidth:2,
+      borderColor:"#000",
+      borderRadius:20,
+      padding: 10,
+      margin:5,
+      top: 30,
     },
     uploadButtonText: {
-        fontSize: 25,
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: "#FFF"
+      margin:1,
+      color:"#FFF",
+      padding:4,
+
+
     },
     recommendations: {
         backgroundColor: "#145DA0",
+        borderWidth:2,
+        borderColor:"#000",
+        borderRadius:10,
         width: '80%',
         height: '50%',
         bottom: 50,
@@ -148,7 +155,26 @@ const styles = StyleSheet.create({
         borderRadius:20,
 
         margin:5,
+    },
+    efficiencyText: {
+      margin:1,
+      color:"#FFF",
+      padding:4,
+      fontSize: 50,
+      fontWeight: 'bold',
+      position: 'absolute',
+      top: 100,
+      left: 70,
+    },
+    effSubText: {
+      margin:1,
+      color:"#FFF",
+      padding:4,
+      position: 'absolute',
+      top: 180,
+      left: 15,
     }
+
 })
 
 

@@ -1,10 +1,11 @@
-import { 
+import {
     CHANGE_LAT,
-    CHANGE_LON, 
-    SET_PARAM, 
+    CHANGE_LON,
+    SET_PARAM,
     SET_START_DATE,
     SET_END_DATE,
     TEMP_RES,
+    CHANGE_BRAND,
     } from "./actions"
 export const changeLat = (lat) => ({
     type: CHANGE_LAT,
@@ -34,4 +35,9 @@ export const setEndDate = (val) => ({
 export const setTempRes = (val) => ({
     type: TEMP_RES,
     payload:val,
+})
+
+export const changeBrand = (brand) => ({
+    type: CHANGE_BRAND,
+    payload: brand,
 })

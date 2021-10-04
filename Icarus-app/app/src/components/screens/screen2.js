@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import {StyleSheet,ImageBackground,Image, View, Text, TextInput, TouchableOpacity, Button } from "react-native";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
-import { changeLat, changeLon, setStartDate, setEndDate, setTempRes, setParam } from '../../redux/actions/index'
+import { changeLat, changeLon, setStartDate, setEndDate, setTempRes, setParam, changeBrand } from '../../redux/actions/index'
 import { useSelector, useDispatch } from "react-redux";
 import ModalSelector from 'react-native-modal-selector'
 import Modal from "react-native-modal";
@@ -29,6 +29,7 @@ const Screen2 = () =>{
     const dispatch = useDispatch();
     const [modalVisible, setModalVisible] = useState(false)
     const toggleModal = () => setModalVisible(()=>!modalVisible)
+    const brand = useSelector(state=>state.brand.brand);
 
     const [checked, setChecked] = useState('daily');
 
@@ -42,8 +43,8 @@ const Screen2 = () =>{
 
         <View style={styles.bodyContainer}>
 
-        <TouchableOpacity style={styles.button} onPress={toggleModal}>
-          <Text style={styles.buttonText}>Upload Data</Text>
+        <TouchableOpacity style={styles.uploadButton} onPress={toggleModal}>
+          <Text style={styles.uploadButtonText}>Upload Data</Text>
         </TouchableOpacity>
         <Modal isVisible={modalVisible}>
           <View style={styles.modalContainer}>
@@ -76,7 +77,7 @@ const Screen2 = () =>{
                     selectTextStyle={{color:'#000'}}
                     data={brandData}
                     initValue="Solar Panel Brand"
-                    onChange={(val)=>dispatch(setParam(val.key))}
+                    onChange={(val)=>dispatch(changeBrand(val.key))}
                 />
 
             </View>
@@ -115,8 +116,10 @@ const Screen2 = () =>{
           </View>
         </Modal>
       </View>
-      <Text style={styles.pvText}>Calculated PV Panel Efficiency:</Text>
-      <View style={styles.recommendations}><Text style={styles.buttonText}>Typical Range: </Text></View>
+      <Text style={styles.pvText}>PV Panel Efficiency:</Text>
+
+      <View style={styles.recommendations}><Text style={styles.efficiencyText}> {brand}%
+       </Text><Text style={styles.effSubText}>Of the solar irradiance reaching your panels is converted into electricity</Text></View>
       </View>
 
     )
