@@ -1,8 +1,8 @@
 import { SET_START_DATE, SET_END_DATE } from "../actions/actions";
 
 const intialDates = {
-    startDate:new Date("2020-01-01"),
-    endDate: new Date("2020-01-08"),
+    startDate:null,
+    endDate: null,
 };
 
 const dateReducer = (state=intialDates, action) =>{

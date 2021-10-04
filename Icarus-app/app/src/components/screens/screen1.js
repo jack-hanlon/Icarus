@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Image, View, Text, TextInput, TouchableOpacity, Button } from "react-native";
+import axios from "axios";
 import { styles } from "../../themes/styleSheet"
 import Metrics from "../../themes/metrics";
 import { changeLat, changeLon, setStartDate, setEndDate, setTempRes, setParam } from '../../redux/actions/index'
@@ -17,12 +18,15 @@ import {
     VictoryAxis,
     } from 'victory-native'
 
+import convertDate from "../../utils/dateTimeToInt";
 import dataFormater from "../../utils/ApiDataFormater";
 import pickerData from "../assets/modalPickerData";
 
 import * as Location from 'expo-location';
 
-const format_url = (temp_res,param, lon, lat) => `https://power.larc.nasa.gov/api/temporal/${temp_res}/point?parameters=${param}&community=RE&longitude=${lon}&latitude=${lat}&start=20210101&end=20210730&format=JSON`;
+import { store } from "../../redux/store";
+
+const format_url = (temp_res, param, lon, lat, start, end) => `https://power.larc.nasa.gov/api/temporal/${temp_res}/point?parameters=${param}&community=RE&longitude=${lon}&latitude=${lat}&start=${start}&end=${end}&format=JSON`;
 
 
 const dummyRawData =
@@ -43,6 +47,7 @@ const dummyData = dataFormater(dummyRawData).data
 
 const Screen1 = ({navigation}) =>{
 
+// Get states from redux store
     const dispatch = useDispatch();
     const lat = useSelector(state=>state.coords.lat);
     const lon = useSelector(state=>state.coords.lon);
@@ -50,22 +55,31 @@ const Screen1 = ({navigation}) =>{
     const startDate = useSelector(state=>state.dates.startDate)
     const endDate = useSelector(state=>state.dates.endDate)
     const tempRes = useSelector(state=>state.tempRes.temp_res)
+    
+// store data from fetch request
+    const [data, setData] = useState()
 
+// Modal view boolean
     const [modalVisible, setModalVisible] =  useState(false);
+
+// Geolocation boolean
     const [getLocation, setGetLocation] = useState(false);
 
-    // const [startDate, setStartDate] = useState(new Date());
-    // const [endDate, setEndDate] = useState(new Date(1598051730000));
-    //const [mode, setMode] = useState('date');
+    const [startTmp, setStartTmp] = useState(new Date(1598051730000));
+    const [endTmp, setEndTmp] = useState(new Date(1598051730000));
+// Boolean state of modal calender
     const [showStart, setShowStart] = useState(false);
     const [showEnd, setShowEnd] = useState(false);
 
+// boolean state of radio buttons
     const [checked, setChecked] = useState('daily');
 
+// Geoloaction states
     const [location, setLocation] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
 
-     useEffect(() => {
+// Handles GeoLocation
+    useEffect(() => {
         (async () => {
             let { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
@@ -77,7 +91,10 @@ const Screen1 = ({navigation}) =>{
             setLocation(location);
         })();
         }, [getLocation]);
-
+    useEffect(()=>{
+        dispatch(setTempRes(checked))
+    },[checked])
+// Handle response from Geolocation req
     let text = 'Waiting..';
     if (errorMsg) {
         text = errorMsg;
@@ -85,6 +102,7 @@ const Screen1 = ({navigation}) =>{
         text = JSON.stringify(location);
     }
 
+// Update state with Geolocation output
     const handleGetLoc = () =>{
         setGetLocation(()=>!getLocation)
         dispatch(changeLat(location.coords.latitude))
@@ -92,20 +110,80 @@ const Screen1 = ({navigation}) =>{
         //console.log(location.coords.latitude, location.coords.longitude)
     };
 
+// Handle Modal views
     const handleModal = () => setModalVisible(()=>!modalVisible)
     const handleStart = () => setShowStart(()=>!showStart)
     const handleEnd = () => setShowEnd(()=>!showEnd)
 
+// Handle Calendar  dates
     const onChangeStart = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
+        const currentDate = selectedDate;
         setShowStart(Platform.OS === 'ios');
-        setStartDate(currentDate);
+        const goodDate = convertDate(currentDate, tempRes)
+        dispatch(setStartDate(goodDate))
+        
       };
     const onChangeEnd = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShowEnd(Platform.OS === 'ios');
-        setEndDate(currentDate);
+        const goodDate = convertDate(currentDate,tempRes )
+        dispatch(setEndDate(goodDate))
       };
+
+    //   console.log(store.getState())
+// Fetch form POWER API
+
+// const updateData = (response) => {
+//     // Takes the response of the api call, extracts, splits
+//     // then updates data states for plotting
+    
+//     if(parameterName == 'T2M'){
+//       const T2M = response.data.properties.parameter.T2M
+//       console.log(T2M)
+//       const dates = Object.keys(T2M)
+//       const temps = Object.keys(T2M)
+//       setLabel(dates), setData(temps)
+//     }
+//    else if (parameterName == 'ALLSKY_SFC_SW_DWN') {
+//     const Flux = response.data.properties.parameter.ALLSKY_SFC_SW_DWN
+//     console.log(Flux)
+//     const dates = Object.keys(Flux)
+//     const flux = Object.keys(Flux)
+//     setLabel(dates), setData(flux)
+//    } 
+
+//    else {
+//      return;
+//    }
+//   };
+  
+const apiCall = () => {
+    const data_url = format_url(tempRes, param, lon, lat, startDate, endDate)
+    console.log(data_url)
+    // axios.get(data_url)
+    //   .then(response => {
+    //     //console.log(response)
+    //     updateData(response);
+    // }, error => {
+    //   console.log(error)
+    // });
+  }
+
+//   const apiCallAsync = async () => {
+//     const data_url = format_url(tempRes, param, lon, lat, startDate, endDate)
+//     try {
+//         const resp = await axios.get(data_url);
+//         console.log(resp.data);
+//     } catch (err) {
+//         // Handle Error Here
+//         console.error(err);
+//     }
+// }
+
+//  // Handle Submit button
+  const handleSubmit = () =>{
+        apiCall
+  }
 
 
     return(
@@ -178,38 +256,6 @@ const Screen1 = ({navigation}) =>{
 
                     </View>
                     <View style={styles.modalSection}>
-                        <Text style={styles.text2}>Pick date range:</Text>
-                    </View>
-                    <View style={styles.rowContainer}>
-
-                    <TouchableOpacity style={styles.modalButton} onPress={handleStart}>
-                        <Text style={styles.buttonText}>start date</Text>
-                    </TouchableOpacity>
-                    {showStart && (
-                        <DateTimePicker
-                        testID="dateTimePicker"
-                        value={startDate}
-                        mode={'date'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChangeStart}
-                        />
-                    )}
-                    <TouchableOpacity style={styles.modalButton} onPress={handleEnd}>
-                        <Text style={styles.buttonText}>end date</Text>
-                    </TouchableOpacity>
-                    {showEnd && (
-                        <DateTimePicker
-                        testID="dateTimePicker"
-                        value={endDate}
-                        mode={'date'}
-                        is24Hour={true}
-                        display="default"
-                        onChange={onChangeEnd}
-                        />
-                    )}
-                    </View>
-                    <View style={styles.modalSection}>
                         <Text style={styles.text2}>Temporal resolution</Text>
                     </View>
                     <View style={styles.rowContainer}>
@@ -226,6 +272,37 @@ const Screen1 = ({navigation}) =>{
                             onPress={() => setChecked('monthly')}
                         />
                     </View>
+                    <View style={styles.modalSection}>
+                        <Text style={styles.text2}>Pick date range:</Text>
+                    </View>
+                    <View style={styles.rowContainer}>
+                    <TouchableOpacity style={styles.modalButton} onPress={handleStart}>
+                        <Text style={styles.buttonText}>start date</Text>
+                    </TouchableOpacity>
+                    {showStart && (
+                        <DateTimePicker
+                        testID="dateTimePicker"
+                        value={startTmp}
+                        mode={'date'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeStart}
+                        />
+                    )}
+                    <TouchableOpacity style={styles.modalButton} onPress={handleEnd}>
+                        <Text style={styles.buttonText}>end date</Text>
+                    </TouchableOpacity>
+                    {showEnd && (
+                        <DateTimePicker
+                        testID="dateTimePicker"
+                        value={endTmp}
+                        mode={'date'}
+                        is24Hour={true}
+                        display="default"
+                        onChange={onChangeEnd}
+                        />
+                    )}
+                    </View>
                 </View>
 
                     <TouchableOpacity style={styles.button} onPress={handleModal}>
@@ -238,7 +315,9 @@ const Screen1 = ({navigation}) =>{
             </Modal>
             <Text style={styles.text2}>Parameters selected:</Text>
             <Text style={styles.text2}>Lat = {lat}   Lon = {lon}   Param = {param}</Text>
-
+            <TouchableOpacity style={styles.button} onPress={apiCall}>
+                <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
             {/* <MapView
                 style={{ alignSelf: 'stretch', flex:0.75}}
                 region={mapRegion}

@@ -27,7 +27,7 @@ export const setStartDate = (val) => ({
 })
 
 export const setEndDate = (val) => ({
-    type: SET_End_DATE,
+    type: SET_END_DATE,
     payload:val,
 })
 
