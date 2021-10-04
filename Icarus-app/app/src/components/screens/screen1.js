@@ -327,7 +327,7 @@ const apiCall = () => {
             </View>
 
             <Chart
-                width={Metrics.screenWidth * 0.8}
+                width={Metrics.screenWidth * 0.9}
                 height={Metrics.screenHeight * 0.3}
                 scale={{x: "time", y: "linear"}}
                 >

@@ -7,8 +7,8 @@ const Tab = createBottomTabNavigator();
 const TabNav = () =>{
     return(
         <Tab.Navigator>
-            <Tab.Screen name="Screen1" component={Screen1} options={{ headerShown: false }} />
-            <Tab.Screen name="Screen2" component={Screen2} options={{ headerShown: false }}/>
+            <Tab.Screen name="Viewer" component={Screen1} options={{ headerShown: false }} />
+            <Tab.Screen name="Efficiency" component={Screen2} options={{ headerShown: false }}/>
         </Tab.Navigator>
     )
 }
