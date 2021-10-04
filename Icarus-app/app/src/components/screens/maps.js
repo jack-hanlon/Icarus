@@ -30,7 +30,7 @@ const Maps = ({navigation}) =>{
     }
     return(
         <View style={styles.container}>
-        <Text style={styles.buttonText}>Click and Drag the red icon ...</Text>
+        <Text style={styles.text2}>Click and Drag the red icon ...</Text>
             <MapView
                 style={{alignSelf:'stretch', flex:0.9}}
                 initialRegion={mapRegion}
@@ -46,7 +46,7 @@ const Maps = ({navigation}) =>{
                 style={styles.button}
                 onPress={handleSubmit}
             >
-                <Text style={styles.text2}>Use coordinate</Text>
+                <Text style={styles.text}>Use coordinate</Text>
             </TouchableOpacity>
             {/* <TouchableOpacity
                 style={styles.button}

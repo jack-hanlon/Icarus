@@ -55,7 +55,7 @@ const Screen1 = ({navigation}) =>{
     const startDate = useSelector(state=>state.dates.startDate)
     const endDate = useSelector(state=>state.dates.endDate)
     const tempRes = useSelector(state=>state.tempRes.temp_res)
-    
+
 // store data from fetch request
     const [data, setData] = useState(dummyData)
 
@@ -123,7 +123,7 @@ const Screen1 = ({navigation}) =>{
         setShowStart(Platform.OS === 'ios');
         const goodDate = convertDate(currentDate, tempRes)
         dispatch(setStartDate(goodDate))
-        
+
       };
     const onChangeEnd = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -138,7 +138,7 @@ const Screen1 = ({navigation}) =>{
 const updateData = (response) => {
     // Takes the response of the api call, extracts, splits
     // then updates data states for plotting
-    
+
     if(param== 'T2M'){
       const T2M = response.data.properties.parameter.T2M
       //console.log(T2M)
@@ -152,13 +152,13 @@ const updateData = (response) => {
       //console.log(dataFormated)
     setData(dataFormated)
     //setLabel(dates), setData(flux)
-   } 
+   }
 
    else {
      return;
    }
   };
-  
+
 const apiCall = () => {
     const data_url = format_url(tempRes, param, lon, lat, startDate, endDate)
     console.log(data_url)
@@ -187,11 +187,11 @@ const apiCall = () => {
         apiCall
   }
 
-    
+
     return(
 
         <View style={styles.container}>
-        
+
         <View style={styles.logoContainer}>
           <Text style={styles.logoText}>ICARUS</Text>
           <Image style={styles.logo} source={require('../assets/icarus.jpg')}/>
@@ -218,17 +218,17 @@ const apiCall = () => {
             <Modal isVisible={modalVisible}>
                 <View style={styles.modalContainer}>
                     <View style={styles.modalSection}>
-                        <Text style={styles.text2}>Enter coordinates</Text>
+                        <Text style={styles.text}>Enter coordinates</Text>
                     </View>
                     <View style={styles.rowContainer}>
-                        <Text style={styles.text2}>Lat: </Text>
+                        <Text style={styles.text}>Lat: </Text>
                         <TextInput
                             style={styles.textInput}
                             onChangeText={(val)=>dispatch(changeLat(val))}
                             keyboardType='numeric'
                             placeholder={lat.toString()}
                             />
-                        <Text style={styles.text2}>Lon: </Text>
+                        <Text style={styles.text}>Lon: </Text>
                         <TextInput
                             style={styles.textInput}
                             onChangeText={(val)=>dispatch(changeLon(val))}
@@ -247,7 +247,7 @@ const apiCall = () => {
 
                     </View>
                     <View style={styles.modalSection}>
-                        <Text style={styles.text2}>Choose Parameter</Text>
+                        <Text style={styles.text}>Choose Parameter</Text>
                     </View>
                     <View style={styles.rowContainer}>
                         <ModalSelector
@@ -261,16 +261,16 @@ const apiCall = () => {
 
                     </View>
                     <View style={styles.modalSection}>
-                        <Text style={styles.text2}>Temporal resolution</Text>
+                        <Text style={styles.text}>Temporal resolution</Text>
                     </View>
                     <View style={styles.rowContainer}>
-                    <Text style={styles.text2}>Daily</Text>
+                    <Text style={styles.text}>Daily</Text>
                     <RadioButton
                             value="daily"
                             status={ checked === 'daily' ? 'checked' : 'unchecked' }
                             onPress={() => setChecked('daily')}
                         />
-                        <Text style={styles.text2}>Monthly</Text>
+                        <Text style={styles.text}>Monthly</Text>
                         <RadioButton
                             value="monthly"
                             status={ checked === 'monthly' ? 'checked' : 'unchecked' }
@@ -278,7 +278,7 @@ const apiCall = () => {
                         />
                     </View>
                     <View style={styles.modalSection}>
-                        <Text style={styles.text2}>Pick date range:</Text>
+                        <Text style={styles.text}>Pick date range:</Text>
                     </View>
                     <View style={styles.rowContainer}>
                     <TouchableOpacity style={styles.modalButton} onPress={handleStart}>
@@ -325,7 +325,7 @@ const apiCall = () => {
                 <Text style={styles.buttonText}>Submit</Text>
             </TouchableOpacity>
             </View>
-            
+
             <Chart
                 width={Metrics.screenWidth * 0.8}
                 height={Metrics.screenHeight * 0.3}

@@ -17,9 +17,9 @@ const styles = StyleSheet.create({
         justifyContent: "flex-end",
     },
     text:{
-        color:colors.textPrimary,
+        color:"#FFF",
         margin:10,
-        fontSize: fontSize.font20
+        //fontSize: fontSize.font20
     },
     text2:{
         color:colors.textPrimary,
@@ -105,13 +105,13 @@ const styles = StyleSheet.create({
     },
     modalContainer:{
         flex:0.9,
-        backgroundColor:'#9dcdfa',
+        backgroundColor:'#145DA0',
         alignItems:'center',
         justifyContent:'center',
     },
     button:{
         alignItems: "center",
-        backgroundColor: "#9dcdfa",
+        backgroundColor: "#145DA0",
         borderWidth:2,
         borderColor:"#000",
         borderRadius:20,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     buttonText:{
         margin:1,
-        color:colors.textPrimary,
+        color:"#FFF",
         padding:4,
     },
     modalSection:{
@@ -142,11 +142,11 @@ const styles = StyleSheet.create({
     },
     modalButton:{
         alignItems: "center",
-        backgroundColor: "#9dcdfa",
+        backgroundColor: "#145DA0",
         borderWidth:2,
         borderColor:"#000",
         borderRadius:20,
-        
+
         margin:5,
     }
 })
