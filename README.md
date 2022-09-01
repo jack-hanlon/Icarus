@@ -41,5 +41,5 @@ React Native Cross Platform Mobile Application Development, using Expo for deplo
 # Demo
 https://www.youtube.com/watch?v=06NXWdsHpOM&ab_channel=JackHanlon
 # Team Members
-### Jack Hanlon, B.Sc. Physics & Computer Science - jacklhanlon@yahoo.co.uk
-### Thomas Genet, B.Sc. Physics - thomgenet1@gmail.com
+### Jack Hanlon, B.Sc. Physics & Computer Science
+### Thomas Genet, B.Sc. Physics 
